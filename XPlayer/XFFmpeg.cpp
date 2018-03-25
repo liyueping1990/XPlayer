@@ -224,6 +224,11 @@ bool XFFmpeg::ToRGB(char * out, int outWidth, int outHeight)
 	}
 
 	AVCodecContext *videoCtx = ic->streams[this->videoStream]->codec;
+	if (AV_PIX_FMT_NONE == videoCtx->pix_fmt)
+	{
+		mutex.unlock();
+		return false;
+	}
 	cCtx = sws_getCachedContext(cCtx,
 		videoCtx->width,
 		videoCtx->height,
@@ -250,10 +255,10 @@ bool XFFmpeg::ToRGB(char * out, int outWidth, int outHeight)
 	int h = sws_scale(cCtx, yuv->data, yuv->linesize, 0, videoCtx->height,
 		data,
 		lineSize); // 返回转码后高度
-	if (h > 0)
-	{
-		printf("(%d)", h);
-	}
+	//if (h > 0)
+	//{
+	//	printf("(%d)", h);
+	//}
 
 	mutex.unlock();
 	return false;

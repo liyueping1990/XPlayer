@@ -11,7 +11,6 @@ XPlayer::XPlayer(QWidget *parent)
 {
 	ui.setupUi(this);
 	startTimer(10);
-	openFile("video.mp4");
 }
 
 XPlayer::~XPlayer()
@@ -57,6 +56,8 @@ void XPlayer::openFile(QString name)
 	int sec = (totalMs / 1000) % 60;
 	sprintf(buf, "/%02d:%02d:%02d", hour, min, sec);
 	ui.totalTime->setText(buf);
+
+	isPlay = false;
 	play();
 }
 
@@ -90,6 +91,7 @@ void XPlayer::timerEvent(QTimerEvent * e)
 void XPlayer::play()
 {
 	isPlay = !isPlay;
+	XFFmpeg::Get()->isPlay = isPlay;
 	if (isPlay)
 	{
 		// pause
@@ -99,7 +101,6 @@ void XPlayer::play()
 	{
 		ui.playButton->setStyleSheet(PLAY);
 	}
-	XFFmpeg::Get()->isPlay = isPlay;
 }
 
 void XPlayer::sliderPress()
