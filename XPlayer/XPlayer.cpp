@@ -61,7 +61,7 @@ void XPlayer::openFile(QString name)
 	play();
 }
 
-void XPlayer::open()
+void XPlayer::open() 
 {
 	QString name = QFileDialog::getOpenFileName(
 		this, QString::fromLocal8Bit("选择视频文件"));
