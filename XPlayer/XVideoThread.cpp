@@ -1,8 +1,12 @@
 #include "XVideoThread.h"
 #include "XFFmpeg.h"
 #include "XAudioPlay.h"
+#include "list"
 
 bool isExit = false;
+
+static std::list<AVPacket> videos;
+static int apts = -1;
 
 void XVideoThread::run()
 {
@@ -13,6 +17,19 @@ void XVideoThread::run()
 		{
 			msleep(10);
 			continue;
+		}
+
+		while (videos.size() > 0)
+		{
+			AVPacket pack = videos.front();
+			int pts = XFFmpeg::Get()->GetPts(&pack);
+			if (pts > apts)
+			{
+				break;
+			}
+			XFFmpeg::Get()->Decode(&pack);
+			av_packet_unref(&pack);
+			videos.pop_front();
 		}
 
 		int free = XAudioPlay::Get()->GetFree();
@@ -31,7 +48,7 @@ void XVideoThread::run()
 
 		if (pkt.stream_index == XFFmpeg::Get()->audioStream)
 		{
-			XFFmpeg::Get()->Decode(&pkt);
+			apts = XFFmpeg::Get()->Decode(&pkt);
 			av_packet_unref(&pkt);
 			int len = XFFmpeg::Get()->ToPCM(out);
 			XAudioPlay::Get()->Write(out, len);
@@ -45,8 +62,9 @@ void XVideoThread::run()
 			continue;
 		}
 
-		XFFmpeg::Get()->Decode(&pkt);
-		av_packet_unref(&pkt);
+		//XFFmpeg::Get()->Decode(&pkt);
+		//av_packet_unref(&pkt);
+		videos.push_back(pkt);
 
 		//if (XFFmpeg::Get()->fps >0)
 		//{

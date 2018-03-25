@@ -155,6 +155,20 @@ AVPacket XFFmpeg::Read()
 	return pkt;
 }
 
+int XFFmpeg::GetPts(const AVPacket * pkt)
+{
+	mutex.lock();
+	if (!ic)
+	{
+		mutex.unlock();
+		return -1;
+	}
+	int p = pkt->pts * r2d(ic->streams[pkt->stream_index]->time_base) * 1000;
+	
+	mutex.unlock();
+	return p;
+}
+
 int XFFmpeg::Decode(const AVPacket * pkt)
 {
 	mutex.lock();

@@ -22,6 +22,8 @@ public:
 	void Close();
 	AVPacket Read(); // 返回值需要用户清理
 
+	int GetPts(const AVPacket *pkt);
+
 	int Decode(const AVPacket *pkt);
 
 	bool ToRGB(char* out, int outWidth, int outHeight);
