@@ -11,6 +11,7 @@ XPlayer::XPlayer(QWidget *parent)
 {
 	ui.setupUi(this);
 	startTimer(10);
+	openFile("video.mp4");
 }
 
 XPlayer::~XPlayer()
@@ -30,10 +31,9 @@ void XPlayer::resizeEvent(QResizeEvent * e)
 	ui.playSlider->move(40, this->height() - 100);
 }
 
-void XPlayer::open()
+
+void XPlayer::openFile(QString name)
 {
-	QString name = QFileDialog::getOpenFileName(
-		this, QString::fromLocal8Bit("选择视频文件"));
 	if (name.isEmpty())
 	{
 		return;
@@ -43,15 +43,29 @@ void XPlayer::open()
 	if (totalMs <= 0)
 	{
 		QMessageBox::information(this, "err", "file open failed!");
+		return;
 	}
+
+	XAudioPlay::Get()->sampleRate = XFFmpeg::Get()->sampleRate;
+	XAudioPlay::Get()->channel = XFFmpeg::Get()->channel;
+	XAudioPlay::Get()->sampleSize = 16;
+	XAudioPlay::Get()->Start();
+
 	char buf[1024] = { 0 };
 	int hour = ((totalMs / 1000) / 60) / 60;
 	int min = ((totalMs / 1000) / 60) % 60;
 	int sec = (totalMs / 1000) % 60;
 	sprintf(buf, "/%02d:%02d:%02d", hour, min, sec);
 	ui.totalTime->setText(buf);
-
 	play();
+}
+
+void XPlayer::open()
+{
+	QString name = QFileDialog::getOpenFileName(
+		this, QString::fromLocal8Bit("选择视频文件"));
+	openFile(name);
+
 }
 
 void XPlayer::timerEvent(QTimerEvent * e)

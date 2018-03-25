@@ -1,9 +1,23 @@
 #include "XPlayer.h"
 #include <QtWidgets/QApplication>
 //#include "XFFmpeg.h"
+#include <QAudioOutput>
 
 int main(int argc, char *argv[])
 {
+	QAudioOutput *out = nullptr;
+	QAudioFormat fmt;
+	fmt.setSampleRate(48000);
+	fmt.setSampleSize(16);
+	fmt.setChannelCount(2);
+	fmt.setCodec("audio/pcm");
+	fmt.setByteOrder(QAudioFormat::LittleEndian);
+	fmt.setSampleType(QAudioFormat::UnSignedInt);
+
+	out = new QAudioOutput(fmt);	
+	QIODevice* ad = out->start();
+
+
 	//XFFmpeg *xFFmpeg = XFFmpeg::Get();
 	//bool isOpen = xFFmpeg->Open("video_mv.mp4");
 	//if (isOpen)
