@@ -46,12 +46,12 @@ public:
         openGLWidget->setStyleSheet(QStringLiteral(""));
         openButton = new QPushButton(XPlayerClass);
         openButton->setObjectName(QStringLiteral("openButton"));
-        openButton->setGeometry(QRect(320, 500, 50, 50));
+        openButton->setGeometry(QRect(320, 530, 50, 50));
         openButton->setStyleSheet(QLatin1String("QPushButton:!hover{border-image: url(:/XPlayer/Resources/open_normal.png);}\n"
 "QPushButton:hover{border-image: url(:/XPlayer/Resources/open_hot.png);}"));
         playButton = new QPushButton(XPlayerClass);
         playButton->setObjectName(QStringLiteral("playButton"));
-        playButton->setGeometry(QRect(400, 500, 50, 50));
+        playButton->setGeometry(QRect(400, 530, 50, 50));
         playButton->setStyleSheet(QLatin1String("QPushButton:!hover{border-image: url(:/XPlayer/Resources/play_normal.png);}\n"
 "QPushButton:hover{border-image: url(:/XPlayer/Resources/play_hot.png);}"));
         playTime = new QLabel(XPlayerClass);
@@ -66,7 +66,7 @@ public:
 "font: 10pt \"\345\256\213\344\275\223\";"));
         playSlider = new XSlider(XPlayerClass);
         playSlider->setObjectName(QStringLiteral("playSlider"));
-        playSlider->setGeometry(QRect(40, 480, 681, 22));
+        playSlider->setGeometry(QRect(40, 500, 700, 20));
         playSlider->setStyleSheet(QStringLiteral(""));
         playSlider->setMaximum(999);
         playSlider->setOrientation(Qt::Horizontal);
